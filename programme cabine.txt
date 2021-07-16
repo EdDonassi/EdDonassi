@@ -1,0 +1,158 @@
+
+
+// Declaration des variables
+
+byte chauffage=2;
+byte pompe=3;
+byte lampeverte=4;
+byte lamperouge=5;
+byte lampebleu=6;
+byte trigger=7;
+byte eco=8;
+byte electrovanne=10;
+byte lampeevacuation=11;
+byte flotteurbas=12;
+byte buzzer=13;
+int  capteurdeniveau=A1;
+int  duree;
+int  distance;
+int  niveaubac;
+int  niveaureservoir;
+
+
+void setup() {
+
+
+//Configuration de pins
+
+  pinMode(chauffage, OUTPUT);
+  pinMode(pompe, OUTPUT);
+  pinMode(lampeverte, OUTPUT);
+  pinMode(lamperouge, OUTPUT);
+  pinMode(lampebleu, OUTPUT);
+  pinMode(trigger, OUTPUT);
+  pinMode(electrovanne, OUTPUT);
+  pinMode(lampeevacuation, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(flotteurbas, INPUT);
+  pinMode(eco, INPUT);
+  pinMode(capteurdeniveau, INPUT);
+  Serial.begin(9600);     
+}
+
+
+
+
+
+void loop()
+{
+
+
+
+// Programme pour la lecture de la taille de la personne
+  
+  digitalWrite(trigger, HIGH);    
+  delay(1);
+  digitalWrite(trigger, LOW);  
+  duree = pulseIn(eco, HIGH); 
+  distance = duree / 58.2;
+  Serial.println("hauteur"); 
+  Serial.println(distance);
+  delay(100);       
+
+
+
+// Programme de nebulisation pour les personnes de grande taille
+
+  if (distance<73){
+    digitalWrite(lamperouge, HIGH);
+    digitalWrite(lampeverte, LOW);
+    digitalWrite(pompe, HIGH);
+    digitalWrite(chauffage, HIGH);
+    delay(3000);
+    digitalWrite(pompe, LOW);
+    tone(buzzer,4000);
+    delay(100);
+    noTone(buzzer);
+    delay(100);
+    tone(buzzer,4000);
+    delay(100);
+    noTone(buzzer);
+    delay(100);
+    delay(2000);
+    digitalWrite(lamperouge, LOW);
+    digitalWrite(lampeverte, HIGH);
+    goto suite;
+  }
+  else{
+    digitalWrite(lampeverte, HIGH);
+    digitalWrite(lamperouge, LOW);    
+    }
+
+
+
+
+// Programme de nebulisation pour les personnes de petite taille
+  if (distance<93){
+    digitalWrite(lamperouge, HIGH);
+    digitalWrite(lampeverte, LOW);
+    digitalWrite(electrovanne, HIGH);
+    digitalWrite(pompe, HIGH);
+
+    delay(3000);
+    digitalWrite(pompe, LOW);
+    digitalWrite(electrovanne, LOW);
+    tone(buzzer,4000);
+    delay(100);
+    noTone(buzzer);
+    delay(100);
+    tone(buzzer,4000);
+    delay(100);
+    noTone(buzzer);
+    delay(100);
+    delay(2000);
+    digitalWrite(lamperouge, LOW);
+    digitalWrite(lampeverte, HIGH);
+  }
+ 
+  else{
+    digitalWrite(lampeverte, HIGH);
+    digitalWrite(lamperouge, LOW);
+    
+    }
+
+
+
+//programme pour lampe réservoir vide
+
+  suite:
+  
+  niveaureservoir=digitalRead(flotteurbas);
+  if (niveaureservoir == HIGH){
+    digitalWrite(lampebleu, HIGH);
+  }
+
+  else{
+    digitalWrite(lampebleu, LOW);
+  }
+
+
+
+//programme de la lampe bac de rétension plein
+
+   niveaubac = analogRead(capteurdeniveau);
+
+   if (niveaubac>=80){
+    digitalWrite(lampeevacuation, HIGH);
+   }
+  else{
+    digitalWrite(lampeevacuation, LOW);
+  }
+  
+   
+}
+
+
+
+
+
