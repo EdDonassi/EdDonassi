@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @EdDonassi
 - 👀 I’m interested in programming
-- 🌱 I’m currently learning Java
+- 🌱 I’m currently learning web technologies
 - 📫 How to reach me: elmajidy@outlook.com
 
 <!---
